@@ -181,15 +181,27 @@ public class Main extends Application {
 					imageView.setFitWidth(IMAGE_SIZE);
 					// Add click event handler to increase the size on click
 					imageView.setOnMouseClicked(event -> {
+						double enlargementFactor = 1.5;
+
 						if (currentlyClickedImageView[0] != null) {
 							// Reset the size of the previously clicked image
 							currentlyClickedImageView[0].setFitHeight(IMAGE_SIZE);
 							currentlyClickedImageView[0].setFitWidth(IMAGE_SIZE);
-
+							currentlyClickedImageView[0].setLayoutX(currentlyClickedImageView[0].getLayoutX()
+									+ IMAGE_SIZE / 2 * (enlargementFactor - 1));
+							currentlyClickedImageView[0].setLayoutY(currentlyClickedImageView[0].getLayoutY()
+									+ IMAGE_SIZE / 2 * (enlargementFactor - 1));
 						}
 
 						// Increase the size of the currently clicked image
-
+						if (currentlyClickedImageView[0] != imageView) {
+							// Enlarge the currently clicked ImageView
+							imageView.setFitHeight(IMAGE_SIZE * enlargementFactor);
+							imageView.setFitWidth(IMAGE_SIZE * enlargementFactor);
+							// Move it to keep it centered
+							imageView.setLayoutX(imageView.getLayoutX() - IMAGE_SIZE / 2 * (enlargementFactor - 1));
+							imageView.setLayoutY(imageView.getLayoutY() - IMAGE_SIZE / 2 * (enlargementFactor - 1));
+						}
 						StringBuilder sb = new StringBuilder();
 
 						String name = (sd.nameOf(v).getName());
