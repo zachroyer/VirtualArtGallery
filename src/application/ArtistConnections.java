@@ -19,5 +19,9 @@ public class ArtistConnections {
 	public Iterable<Artist> getInfluencedArtists() {
 		return influencedArtists;
 	}
+	
+	public Iterable<Artist> getIndirectInfluences() {
+		return indirectInfluences;
+	}
 
 }
