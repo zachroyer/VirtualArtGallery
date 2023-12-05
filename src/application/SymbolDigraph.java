@@ -1,6 +1,7 @@
 package application;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import edu.princeton.cs.algs4.DepthFirstDirectedPaths;
 import edu.princeton.cs.algs4.Digraph;
@@ -79,6 +80,8 @@ public class SymbolDigraph {
 	 * @return {@code Iterable} of strings containing indirect influences
 	 */
 	public Iterable<Artist> indirectInfluences(Artist artist) {
+		// Checks if artist is contained in the Symbol Table
+		// Returns an empty array if it is not contained
 		if (!st.contains(artist.getName())) {
 			return new ArrayList<>();
 		}
@@ -86,10 +89,18 @@ public class SymbolDigraph {
 		ArrayList<Artist> indirectInfluences = new ArrayList<Artist>();
 		int artistIndex = indexOf(artist.getName());
 		DepthFirstDirectedPaths dfds = new DepthFirstDirectedPaths(graph, artistIndex);
-
+		ArrayList<Integer> directNeighbors = new ArrayList<>();
+		for (int adj : graph.adj(artistIndex)) {
+			directNeighbors.add(adj);
+		}
+		/*
+		 * Adds every vertex which artistIndex has an indirect influence
+		 */
 		for (int v = 0; v < graph.V(); v++) {
 			if (v != artistIndex && dfds.hasPathTo(v)) {
-				indirectInfluences.add(nameOf(v));
+				if (!directNeighbors.contains(v)) {
+					indirectInfluences.add(nameOf(v));
+				}
 			}
 		}
 		return indirectInfluences;
@@ -145,17 +156,17 @@ public class SymbolDigraph {
 		if (v < 0 || v >= V)
 			throw new IllegalArgumentException("vertex " + v + " is not between 0 and " + (V - 1));
 	}
+
 	public ArtistConnections getArtistConnections(String artistName) {
 		int artistIndex = indexOf(artistName);
-	    Iterable<Integer> influencedIndices = graph.adj(artistIndex);
-	    ArrayList<Artist> influencedArtists = new ArrayList<>();
-	    for (int index : influencedIndices) {
-	        influencedArtists.add(nameOf(index));
-	    }
-	    
-	    Iterable<Artist> influencingArtists = indirectInfluences(keys[indexOf(artistName)]);
+		Iterable<Integer> influencedIndices = graph.adj(artistIndex);
+		ArrayList<Artist> influencedArtists = new ArrayList<>();
+		for (int index : influencedIndices) {
+			influencedArtists.add(nameOf(index));
+		}
 
-	    return new ArtistConnections(influencedArtists, influencingArtists);
+		Iterable<Artist> influencingArtists = indirectInfluences(keys[indexOf(artistName)]);
+
+		return new ArtistConnections(influencedArtists, influencingArtists);
 	}
-
 }
