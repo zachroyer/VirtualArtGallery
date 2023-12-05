@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 import edu.princeton.cs.algs4.Digraph;
 import javafx.application.Application;
-import javafx.geometry.Bounds;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -14,7 +14,6 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
@@ -28,10 +27,6 @@ public class Main extends Application {
 	private static final int NODE_RADIUS = 70;
 	private static final int IMAGE_SIZE = 170;
 	private static final double ARROW_SIZE = 20;
-	private static final Color LIGHT_BLUE = new Color(62 / 255.0, 151 / 255.0, 233 / 255.0, 0.59);
-	private static Color RED_BROWN = new Color(142 / 255.0, 63 / 255.0, 78 / 255.0, 0.8 / 255.0);
-	private static Color LIME_GREEN = new Color(83 / 255.0, 188 / 255.0, 22 / 255.0, 0.96 / 255.0);
-	private static Color FERN_GREEN = new Color(10 / 255.0, 144 / 255.0, 53 / 255.0, 0.6 / 255.0);
 	private Label label;
 
 	public void start(Stage primaryStage) {
@@ -60,7 +55,7 @@ public class Main extends Application {
 			AnchorPane.setBottomAnchor(scrollPane, 130.0); // Set to 20% of the height
 
 			// Create and configure the TextField
-			label = new Label("this is a text");
+			label = new Label("Click an artist to reveal there influences!");
 			label.setMinHeight(IMAGE_SIZE / 1.5);
 			AnchorPane.setTopAnchor(label, null); // Set to 80% of the height
 			AnchorPane.setRightAnchor(label, 10.0);
@@ -108,9 +103,6 @@ public class Main extends Application {
 	 */
 	private Circle[] addNodes(Group group, SymbolDigraph sd, Scene scene) throws Exception {
 		// Get the dimensions of the window
-
-		Group mainGroup = new Group();
-
 		double windowWidth = scene.getWidth() - 100;
 		double windowHeight = scene.getHeight() - 400;
 		final ImageView[] currentlyClickedImageView = { null }; // Keep track of the currently clicked image
@@ -154,12 +146,27 @@ public class Main extends Application {
 
 					// startX = centerX - totalWidth / 2.0 + col * horizontalSpacing + 50 ;
 					y -= scene.getHeight();
-					node = createNode(startX - 170, y + 160, NODE_RADIUS, v);
-					text = new Text(startX - 200, y + 260, sd.nameOf(v).getName());
-					text.setStyle("-fx-font-size: 20px;");
-					text.setTextAlignment(TextAlignment.CENTER);
+					node = createNode(startX - 290, y + 160, NODE_RADIUS, v);
+
+					// creating box for CSS gradient
+
+					Label l = new Label(sd.nameOf(v).getName());
+					l.getStyleClass().remove("label");
+					l.getStyleClass().add("isStyle");
+					l.setTranslateX(startX - 290 - (IMAGE_SIZE / 2));
+					l.setTranslateY(y + (IMAGE_SIZE / 2.5));
+					l.setAlignment(Pos.CENTER);
+					l.prefHeight(IMAGE_SIZE); // Adjust the size as needed
+					l.setMinHeight(IMAGE_SIZE);
+					l.setPrefWidth(IMAGE_SIZE);
+					group.getChildren().addAll(l);
+					nodes[v] = node;
 
 				} else {
+					String imageName = sd.nameOf(v).getImagePath();
+					String imageURL = "Resources/" + imageName;
+					FileInputStream is = new FileInputStream(imageURL);
+					Image image = new Image(is);
 					// Apply the regular layout for other nodes
 
 					// Adjust the position of the text based on the node position
@@ -168,18 +175,8 @@ public class Main extends Application {
 					text = new Text(startX - NODE_RADIUS, y + 100, sd.nameOf(v).getName());
 					text.setStyle("-fx-font-size: 20px;");
 					text.setTextAlignment(TextAlignment.CENTER);
-				}
 
-				// Adjust image size and positiona
-
-				String imageName = sd.nameOf(v).getImagePath();
-				String imageURL = "Resources/" + imageName;
-				FileInputStream is = new FileInputStream(imageURL);
-				Image image = new Image(is);
-				if (sd.nameOf(v).isStyle()) {
-					// Use horizontal spacing with 4 columns for positioning
-
-					ImageView imageView = createImageView(startX - 170, y + 160, text, image);
+					ImageView imageView = createImageView(startX, y, text, image);
 					imageView.setFitHeight(IMAGE_SIZE); // Adjust the size as needed
 					imageView.setFitWidth(IMAGE_SIZE);
 					// Add click event handler to increase the size on click
@@ -192,33 +189,6 @@ public class Main extends Application {
 						}
 
 						// Increase the size of the currently clicked image
-
-						System.out.println("artist: " + sd.nameOf(v).getName());
-
-						ArtistConnections ac = sd.getArtistConnections((sd.nameOf(v).getName()));
-
-						for (Artist a : ac.getInfluencedArtists()) {
-							label.setText(a.getName());
-						}
-
-						// Update the currently clicked image
-						currentlyClickedImageView[0] = imageView;
-					});
-
-					group.getChildren().addAll(imageView, text);
-					nodes[v] = node;
-				} else {
-					ImageView imageView = createImageView(startX, y, text, image);
-					imageView.setFitHeight(IMAGE_SIZE); // Adjust the size as needed
-					imageView.setFitWidth(IMAGE_SIZE);
-					// Add click event handler to increase the size on click
-					imageView.setOnMouseClicked(event -> {
-						if (currentlyClickedImageView[0] != null) {
-							// Reset the size of the previously clicked image
-							currentlyClickedImageView[0].setFitHeight(IMAGE_SIZE);
-							currentlyClickedImageView[0].setFitWidth(IMAGE_SIZE);
-
-						}
 
 						StringBuilder sb = new StringBuilder();
 
@@ -233,7 +203,7 @@ public class Main extends Application {
 						for (Artist a : ac.getIndirectInfluences()) {
 							sb.append(a.getName());
 						}
-						label.setText("Influenced by " + name + ": " + sb.toString());
+						label.setText(name + "had a strong influence on the following artists: " + sb.toString());
 						// Update the currently clicked image
 						currentlyClickedImageView[0] = imageView;
 					});
@@ -241,30 +211,20 @@ public class Main extends Application {
 					group.getChildren().addAll(imageView, text);
 					nodes[v] = node;
 				}
-
 			}
 		}
-
 		return nodes;
 	}
 
 	private ImageView createImageView(double x, double y, Text text, Image image) {
 		ImageView imageView = new ImageView(image);
-		Bounds textBounds = text.getLayoutBounds();
-
-		double imageCenterX = x;
-		double imageCenterY = y;
-
 		// Adjust the position of the text and image
-
 		double imageX = x - IMAGE_SIZE / 2; // Adjust this as needed
 		double imageY = y - IMAGE_SIZE / 2; // Adjust this as needed
-
 		imageView.setFitHeight(IMAGE_SIZE);
 		imageView.setFitWidth(IMAGE_SIZE);
 		imageView.setX(imageX);
 		imageView.setY(imageY);
-
 		return imageView;
 	}
 
@@ -327,5 +287,6 @@ public class Main extends Application {
 		// Add arrow to the group
 		Group group = (Group) parent;
 		group.getChildren().add(arrow);
+
 	}
 }

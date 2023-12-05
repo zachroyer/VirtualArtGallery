@@ -51,25 +51,25 @@ public class Gallery {
 		return artists;
 	}
 
-	public static void main(String[] args) {
-
-		String fileName = "Resources/artists.csv";
-		ArrayList<Artist> artists = getArtists(fileName);
-
-		SymbolDigraph sd = new SymbolDigraph(artists);
-		Iterable<Integer> sdAdj = sd.digraph().adj(0);
-
-//		System.out.println(sd.digraph());
+//	public static void main(String[] args) {
 //
-//		for (Integer w : sdAdj) {
-//			System.out.println(w);
+//		String fileName = "Resources/artists.csv";
+//		ArrayList<Artist> artists = getArtists(fileName);
+//
+//		SymbolDigraph sd = new SymbolDigraph(artists);
+//		Iterable<Integer> sdAdj = sd.digraph().adj(0);
+//
+////		System.out.println(sd.digraph());
+////
+////		for (Integer w : sdAdj) {
+////			System.out.println(w);
+////		}
+//		ArtistConnections alf = sd.getArtistConnections("Vincent van Gogh");
+//		for (Artist artist : alf.getIndirectInfluences()) {
+//			System.out.println(artist.getName());
 //		}
-		ArtistConnections alf = sd.getArtistConnections("Vincent van Gogh");
-		for (Artist artist : alf.getIndirectInfluences()) {
-			System.out.println(artist.getName());
-		}
-
-
-	}
+//
+//
+//	}
 
 }
