@@ -1,10 +1,10 @@
 package application;
-	
+
+import application.SymbolDigraph;
 import java.io.FileInputStream;
 import java.util.ArrayList;
 
 import edu.princeton.cs.algs4.Digraph;
-import edu.princeton.cs.algs4.SymbolDigraph;
 import javafx.application.Application;
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
@@ -128,7 +128,7 @@ public class Main extends Application {
                 
                 
                 // Check the name of the node and apply a different layout for nodes with a certain name
-                if (sd.nameOf(v).getIsStyle()) {
+                if (sd.nameOf(v).isStyle()) {
                     // Apply a different layout for nodes with the name "SpecialNode"
                     // You can adjust the position and other properties as needed
                    double x = startX + col * horizontalSpacing;

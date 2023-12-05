@@ -11,6 +11,7 @@ public class Artist {
 	private String name, imagePath;
 	private int yearBorn, yearDied;
 	private String[] influences = {};
+	private boolean isStyle;
 
 	public Artist(String name, String imagePath, int yearBorn, int yearDied, String[] influences) {
 		this.name = name;
@@ -30,8 +31,9 @@ public class Artist {
 	}
 	
 	//Overloaded Constructor for Styles, which will be represented as Artists
-	public Artist(String name) {
+	public Artist(String name, String imagePath, Boolean isStyle) {
 		this.name = name;
+		this.isStyle = isStyle;
 	}
 
 	public String getName() {
@@ -52,5 +54,9 @@ public class Artist {
 
 	public String[] getInfluences() {
 		return influences;
+	}
+	
+	public boolean isStyle() {
+		return isStyle;
 	}
 }
