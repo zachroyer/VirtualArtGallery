@@ -31,6 +31,13 @@ public class Main extends Application {
 	  private static final int NODE_RADIUS = 70;
 	    private static final int IMAGE_SIZE = 150;
 	    private static final double ARROW_SIZE = 20;
+//	    private static final Color LIGHT_BLUE = new Color( 0.59, 62, 151, 233);
+	    private static final Color LIGHT_BLUE = new Color(62 / 255.0, 151 / 255.0, 233 / 255.0, 0.59);
+
+//	    private static Color RED_BROWN = new Color(142, 63, 78, 0.8);
+//	    private static Color LIME_GREEN = new Color(83, 188, 22, 0.96);
+//	    private static Color FERN_GREEN = new Color(10, 144, 53, 0.6);
+
 	public void start(Stage primaryStage) {
 		try {
 
