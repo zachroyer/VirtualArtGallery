@@ -1,9 +1,10 @@
 package application;
 
 /**
- * Class to represent artists, including their name, years of birth and death, 
- * an image path file to showcase an artpiece, 
- * and an array of other artists that artist has influenced
+ * Class to represent artists, including their name, years of birth and death,
+ * an image path file to showcase an artpiece, and an array of other artists
+ * that artist has influenced
+ * 
  * @author Zach Royer
  * @author Rafe Danos
  */
@@ -29,8 +30,8 @@ public class Artist {
 		this.yearBorn = yearBorn;
 		this.yearDied = yearDied;
 	}
-	
-	//Overloaded Constructor for Styles, which will be represented as Artists
+
+	// Overloaded Constructor for Styles, which will be represented as Artists
 	public Artist(String name, String imagePath, Boolean isStyle) {
 		this.name = name;
 		this.isStyle = isStyle;
@@ -55,7 +56,7 @@ public class Artist {
 	public String[] getInfluences() {
 		return influences;
 	}
-	
+
 	public boolean isStyle() {
 		return isStyle;
 	}

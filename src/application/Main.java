@@ -1,8 +1,6 @@
 package application;
 
-import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 import edu.princeton.cs.algs4.Digraph;
@@ -13,10 +11,10 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
@@ -28,7 +26,7 @@ import javafx.stage.Stage;
 
 public class Main extends Application {
 	private static final int NODE_RADIUS = 70;
-	private static final int IMAGE_SIZE = 150;
+	private static final int IMAGE_SIZE = 170;
 	private static final double ARROW_SIZE = 20;
 	private static final Color LIGHT_BLUE = new Color(62 / 255.0, 151 / 255.0, 233 / 255.0, 0.59);
 	private static Color RED_BROWN = new Color(142 / 255.0, 63 / 255.0, 78 / 255.0, 0.8 / 255.0);
@@ -59,7 +57,7 @@ public class Main extends Application {
 			AnchorPane.setTopAnchor(scrollPane, 0.0);
 			AnchorPane.setRightAnchor(scrollPane, 0.0);
 			AnchorPane.setLeftAnchor(scrollPane, 25.0);
-			AnchorPane.setBottomAnchor(scrollPane, 120.0); // Set to 20% of the height
+			AnchorPane.setBottomAnchor(scrollPane, 130.0); // Set to 20% of the height
 
 			// Create and configure the TextField
 			label = new Label("this is a text");
@@ -196,6 +194,13 @@ public class Main extends Application {
 						// Increase the size of the currently clicked image
 
 						System.out.println("artist: " + sd.nameOf(v).getName());
+
+						ArtistConnections ac = sd.getArtistConnections((sd.nameOf(v).getName()));
+
+						for (Artist a : ac.getInfluencedArtists()) {
+							label.setText(a.getName());
+						}
+
 						// Update the currently clicked image
 						currentlyClickedImageView[0] = imageView;
 					});
@@ -206,135 +211,121 @@ public class Main extends Application {
 					ImageView imageView = createImageView(startX, y, text, image);
 					imageView.setFitHeight(IMAGE_SIZE); // Adjust the size as needed
 					imageView.setFitWidth(IMAGE_SIZE);
+					// Add click event handler to increase the size on click
 					imageView.setOnMouseClicked(event -> {
-						double enlargementFactor = 1.5;
-
-						if (currentlyClickedImageView[0] != null && currentlyClickedImageView[0] != imageView) {
-							// Reset the previously clicked ImageView
+						if (currentlyClickedImageView[0] != null) {
+							// Reset the size of the previously clicked image
 							currentlyClickedImageView[0].setFitHeight(IMAGE_SIZE);
 							currentlyClickedImageView[0].setFitWidth(IMAGE_SIZE);
-							// Re-center the ImageView
-							currentlyClickedImageView[0].setLayoutX(currentlyClickedImageView[0].getLayoutX()
-									+ IMAGE_SIZE / 2 * (enlargementFactor - 1));
-							currentlyClickedImageView[0].setLayoutY(currentlyClickedImageView[0].getLayoutY()
-									+ IMAGE_SIZE / 2 * (enlargementFactor - 1));
+
 						}
 
-						if (currentlyClickedImageView[0] != imageView) {
-							// Enlarge the currently clicked ImageView
-							imageView.setFitHeight(IMAGE_SIZE * enlargementFactor);
-							imageView.setFitWidth(IMAGE_SIZE * enlargementFactor);
-							// Move it to keep it centered
-							imageView.setLayoutX(imageView.getLayoutX() - IMAGE_SIZE / 2 * (enlargementFactor - 1));
-							imageView.setLayoutY(imageView.getLayoutY() - IMAGE_SIZE / 2 * (enlargementFactor - 1));
+						StringBuilder sb = new StringBuilder();
 
-							// Update the currently clicked ImageView
-							currentlyClickedImageView[0] = imageView;
+						String name = (sd.nameOf(v).getName());
+						ArtistConnections ac = sd.getArtistConnections((sd.nameOf(v).getName()));
 
-//                        imageView.get
+						for (Artist a : ac.getInfluencedArtists()) {
+							sb.append(a.getName() + ", ");
+
 						}
+						sb.append("        Artists Indirectly Influenced :");
+						for (Artist a : ac.getIndirectInfluences()) {
+							sb.append(a.getName());
+						}
+						label.setText("Influenced by " + name + ": " + sb.toString());
+						// Update the currently clicked image
+						currentlyClickedImageView[0] = imageView;
 					});
 
 					group.getChildren().addAll(imageView, text);
 					nodes[v] = node;
 				}
+
 			}
 		}
-			return nodes;
-		
+
+		return nodes;
 	}
 
-	 private ImageView createImageView(double x, double y, Text text, Image image) {
-	        ImageView imageView = new ImageView(image);
-	        Bounds textBounds = text.getLayoutBounds();
+	private ImageView createImageView(double x, double y, Text text, Image image) {
+		ImageView imageView = new ImageView(image);
+		Bounds textBounds = text.getLayoutBounds();
 
-	        double imageCenterX = x;
-	        double imageCenterY = y;
+		double imageCenterX = x;
+		double imageCenterY = y;
 
-	        // Adjust the position of the text and image
+		// Adjust the position of the text and image
 
-	        double imageX = x - IMAGE_SIZE / 2;  // Adjust this as needed
-	        double imageY = y - IMAGE_SIZE / 2;  // Adjust this as needed
+		double imageX = x - IMAGE_SIZE / 2; // Adjust this as needed
+		double imageY = y - IMAGE_SIZE / 2; // Adjust this as needed
 
-	        imageView.setFitHeight(IMAGE_SIZE);
-	        imageView.setFitWidth(IMAGE_SIZE);
-	        imageView.setX(imageX);
-	        imageView.setY(imageY);
+		imageView.setFitHeight(IMAGE_SIZE);
+		imageView.setFitWidth(IMAGE_SIZE);
+		imageView.setX(imageX);
+		imageView.setY(imageY);
 
+		return imageView;
+	}
 
-	        return imageView;
-	    }
-		
-	    private void addEdges(Group group, SymbolDigraph sd, Circle[] nodes) {
-	        Digraph g = sd.digraph();
-	    
-	        Color[] edgeColors = {
-	                Color.RED,
-	                Color.BLUE,
-	                Color.GREEN,
-	                Color.ORANGE,
-	                Color.MAGENTA,
-	                Color.CYAN,
-	                Color.YELLOW,
-	                Color.PINK,
-	                Color.ORANGE,
-	                Color.MAGENTA
-	            };
-	        int colorIndex = 0;
-	        double angleIncrement = 2 * Math.PI / g.V();
+	private void addEdges(Group group, SymbolDigraph sd, Circle[] nodes) {
+		Digraph g = sd.digraph();
 
-	        for (int v = 0; v < g.V(); v++) {
-	            for (int w : g.adj(v)) {
-	                // Check for null nodes[w]
-	                if (nodes[v] != null && nodes[w] != null) {
-	                    double startX = nodes[v].getCenterX() ;
-	                    double startY = nodes[v].getCenterY() ;
+		Color[] edgeColors = { Color.RED, Color.BLUE, Color.GREEN, Color.ORANGE, Color.MAGENTA, Color.CYAN,
+				Color.YELLOW, Color.PINK, Color.ORANGE, Color.MAGENTA };
+		int colorIndex = 0;
+		double angleIncrement = 2 * Math.PI / g.V();
 
-	                    double endX = nodes[w].getCenterX() ;
-	                    double endY = nodes[w].getCenterY() ;
+		for (int v = 0; v < g.V(); v++) {
+			for (int w : g.adj(v)) {
+				// Check for null nodes[w]
+				if (nodes[v] != null && nodes[w] != null) {
+					double startX = nodes[v].getCenterX();
+					double startY = nodes[v].getCenterY();
 
-	                    Line line = new Line(startX, startY, endX, endY);
-	                    line.setStroke(edgeColors[colorIndex]);
-	                    line.setStrokeWidth(2.5);
+					double endX = nodes[w].getCenterX();
+					double endY = nodes[w].getCenterY();
 
-	                    colorIndex = (colorIndex + 1) % edgeColors.length;
+					Line line = new Line(startX, startY, endX, endY);
+					line.setStroke(edgeColors[colorIndex]);
+					line.setStrokeWidth(2.5);
 
-	                    group.getChildren().add(line);
-	                    addArrow(line, endX, endY, startX, startY);
-	                }
-	            }
-	        }
-	    }
-		
-		/**
-		 * 
-		 * @param line
-		 * @param x1
-		 * @param y1
-		 * @param x2
-		 * @param y2
-		 * creates an arrow at the end of an edge 
-		 */
-		public void addArrow(Line line, double x1, double y1, double x2, double y2) {
-		     double angle = Math.atan2(y2 - y1, x2 - x1);
-		        double sin = Math.sin(angle);
-		        double cos = Math.cos(angle);
+					colorIndex = (colorIndex + 1) % edgeColors.length;
 
-		        double x3 = x1 + ARROW_SIZE * (cos + sin);
-		        double y3 = y1 + ARROW_SIZE * (sin - cos);
-		        double x4 = x1 + ARROW_SIZE * (cos - sin);
-		        double y4 = y1 + ARROW_SIZE * (sin + cos);
-
-		    // Create arrow polygon with reversed points
-		    Polygon arrow = new Polygon(x1, y1, x3, y3, x4, y4);
-
-		    // Set arrow color
-		    arrow.setFill(line.getStroke());
-
-		     Parent parent = line.getParent();
-		        // Add arrow to the group
-		        Group group = (Group) parent;
-		        group.getChildren().add(arrow);
-		    
+					group.getChildren().add(line);
+					addArrow(line, endX, endY, startX, startY);
+				}
+			}
 		}
+	}
+
+	/**
+	 * 
+	 * @param line
+	 * @param x1
+	 * @param y1
+	 * @param x2
+	 * @param y2   creates an arrow at the end of an edge
+	 */
+	public void addArrow(Line line, double x1, double y1, double x2, double y2) {
+		double angle = Math.atan2(y2 - y1, x2 - x1);
+		double sin = Math.sin(angle);
+		double cos = Math.cos(angle);
+
+		double x3 = x1 + ARROW_SIZE * (cos + sin);
+		double y3 = y1 + ARROW_SIZE * (sin - cos);
+		double x4 = x1 + ARROW_SIZE * (cos - sin);
+		double y4 = y1 + ARROW_SIZE * (sin + cos);
+
+		// Create arrow polygon with reversed points
+		Polygon arrow = new Polygon(x1, y1, x3, y3, x4, y4);
+
+		// Set arrow color
+		arrow.setFill(line.getStroke());
+
+		Parent parent = line.getParent();
+		// Add arrow to the group
+		Group group = (Group) parent;
+		group.getChildren().add(arrow);
+	}
 }

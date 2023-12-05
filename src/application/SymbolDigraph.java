@@ -1,7 +1,6 @@
 package application;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.ArrayList; 
 
 import edu.princeton.cs.algs4.DepthFirstDirectedPaths;
 import edu.princeton.cs.algs4.Digraph;
@@ -80,12 +79,8 @@ public class SymbolDigraph {
 	 * @return {@code Iterable} of strings containing indirect influences
 	 */
 	public Iterable<Artist> indirectInfluences(Artist artist) {
-		// Checks if artist is contained in the Symbol Table
-		// Returns an empty array if it is not contained
-		if (!st.contains(artist.getName())) {
-			return new ArrayList<>();
-		}
-
+		this.validateVertex(this.indexOf(artist.getName()));
+		
 		ArrayList<Artist> indirectInfluences = new ArrayList<Artist>();
 		int artistIndex = indexOf(artist.getName());
 		DepthFirstDirectedPaths dfds = new DepthFirstDirectedPaths(graph, artistIndex);
