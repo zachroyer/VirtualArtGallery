@@ -1,6 +1,6 @@
 package application;
-
-import application.SymbolDigraph;
+	
+import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
 
@@ -11,20 +11,23 @@ import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 
 public class Main extends Application {
 	  private static final int NODE_RADIUS = 70;
-	    private static final int IMAGE_SIZE = 100;
+	    private static final int IMAGE_SIZE = 150;
 	    private static final double ARROW_SIZE = 20;
 	public void start(Stage primaryStage) {
 		try {
@@ -34,23 +37,47 @@ public class Main extends Application {
 			//Digraph g = new Digraph(new In("src/Resources/graph.txt"));
 			
 			
-			String fileName = "src/Resources/artists.csv";
+			String fileName = "Resources/artists.csv";
 			ArrayList<Artist> artists = Gallery.getArtists(fileName);
 
 	
 			SymbolDigraph sd = new SymbolDigraph(artists);
 		
+			group.prefHeight(500);
+			group.prefWidth(500);
 			
+			TextField f = new TextField("this is a text"); 
 			
+			  AnchorPane a = new AnchorPane();
 			  
+			  a.setPrefSize(1000, 1000);
+			
+			
 			  ScrollPane scrollPane = new ScrollPane();
-
-		        scrollPane.setContent(group);
+			  scrollPane.setStyle("-fx-background-color:transparent;");
+			  scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+			  scrollPane.setContent(group);
+			  AnchorPane.setTopAnchor(scrollPane, 0.0);
+			  AnchorPane.setRightAnchor(scrollPane, 0.0);
+			  AnchorPane.setLeftAnchor(scrollPane, 10.0);
+			  AnchorPane.setBottomAnchor(scrollPane, 120.0); // Set to 20% of the height
+			  
+			// Create and configure the TextField
+			  TextField textField = new TextField("this is a text");
+			  textField.setMinHeight(IMAGE_SIZE/1.5);
+			  AnchorPane.setTopAnchor(textField, null); // Set to 80% of the height
+			  AnchorPane.setRightAnchor(textField, 10.0);
+			  AnchorPane.setLeftAnchor(textField, 10.0);
+			  AnchorPane.setBottomAnchor(textField, 10.0);
+		 
+		     
+	
+				a.getChildren().addAll(scrollPane,textField);
 		        
 		        double screenWidth = Screen.getPrimary().getVisualBounds().getWidth();
 		        double screenHeight = Screen.getPrimary().getVisualBounds().getHeight();
-		        Scene scene = new Scene(scrollPane, (2.0/3.0) * screenWidth, (2.5/3.0) * screenHeight);
-		        
+		        Scene scene = new Scene(a, (2.0/3.0) * screenWidth, (2.5/3.0) * screenHeight);
+	
 			
 			  // Set a handler to adjust node positions when the scene is shown
 		        primaryStage.setOnShown(event -> {
@@ -63,6 +90,9 @@ public class Main extends Application {
 		        });
      
             // Create a stage and show the scene.
+		        String css = this.getClass().getResource("application.css").toExternalForm();
+		        scene.getStylesheets().add(css);
+		        
             primaryStage.setScene(scene);
             
             primaryStage.show();
@@ -74,8 +104,6 @@ public class Main extends Application {
 	
     private Circle createNode(double x, double y, double radius, int v) {
         Circle node = new Circle(x, y, radius);
-        Text text = new Text(x, y, Integer.toString(v));
-        text.setFill(Color.RED);
         node.setFill(Color.TRANSPARENT);
         node.setStroke(Color.BLACK);
         return node;
@@ -120,7 +148,7 @@ public class Main extends Application {
                 double startX = centerX - totalWidth / 2.0 + col * horizontalSpacing + 50 ;
                 // Calculate the position of the node with respect to the center
                
-                double y = centerY + (row - (numRows - 1) / 2.0) * verticalSpacing + 100 + 300;
+                double y = centerY + (row - (numRows - 1) / 2.0) * verticalSpacing + 100;
 
                 Circle node = createNode(startX, y, NODE_RADIUS, v);
                 Text text = new Text(startX, y, sd.nameOf(v).getName());
@@ -136,36 +164,40 @@ public class Main extends Application {
                    startX = centerX - totalWidth / 2.0 + col * horizontalSpacing + 50 ;
                     y-= scene.getHeight() ;
                     node = createNode(startX, y, NODE_RADIUS, v);
-                    text = new Text(x - NODE_RADIUS, y + NODE_RADIUS + 15, sd.nameOf(v).getName());
+                    text = new Text(startX, y , sd.nameOf(v).getName());
                  
                 } else {
                     // Apply the regular layout for other nodes
-                    node = createNode(startX, y, NODE_RADIUS, v);
-                    text = new Text(startX - NODE_RADIUS , y + NODE_RADIUS + 85, sd.nameOf(v).getName());
+                	
+                	   // Adjust the position of the text based on the node position
+                   
+                    node = createNode(startX , y, NODE_RADIUS, v);
+                    text = new Text(startX - NODE_RADIUS  , y+100, sd.nameOf(v).getName());
+                  
+                    text.setTextAlignment(TextAlignment.CENTER);
                 }
 
-                // Adjust image size and position
+                // Adjust image size and positiona
                 String imageName = sd.nameOf(v).getImagePath();
-                String imageURL = "src/img/" + imageName;
+                String imageURL = "Resources/" + imageName;
                 FileInputStream is = new FileInputStream(imageURL);
                 Image image = new Image(is);
                 ImageView imageView = createImageView(startX, y, text, image);
-                imageView.setFitHeight(2 * IMAGE_SIZE);  // Adjust the size as needed
-                imageView.setFitWidth(2 * IMAGE_SIZE);
+                imageView.setFitHeight(IMAGE_SIZE);  // Adjust the size as needed
+                imageView.setFitWidth(IMAGE_SIZE);
 
+                
+                
                 // Add click event handler to increase the size on click
                 imageView.setOnMouseClicked(event -> {
                     if (currentlyClickedImageView[0] != null) {
                         // Reset the size of the previously clicked image
-                        currentlyClickedImageView[0].setFitHeight(2 *IMAGE_SIZE);
-                        currentlyClickedImageView[0].setFitWidth(2 *IMAGE_SIZE);
+                    	currentlyClickedImageView[0].setFitHeight(IMAGE_SIZE);
+                        currentlyClickedImageView[0].setFitWidth(IMAGE_SIZE);
+                        
                     }
 
                     // Increase the size of the currently clicked image
-                    double currentHeight = imageView.getFitHeight();
-                    double currentWidth = imageView.getFitWidth();
-                    imageView.setFitHeight(currentHeight * 1.2);
-                    imageView.setFitWidth(currentWidth * 1.2);
 
                     // Update the currently clicked image
                     currentlyClickedImageView[0] = imageView;
@@ -182,12 +214,21 @@ public class Main extends Application {
     private ImageView createImageView(double x, double y, Text text, Image image) {
         ImageView imageView = new ImageView(image);
         Bounds textBounds = text.getLayoutBounds();
+
+        double imageCenterX = x;
+        double imageCenterY = y;
+
+        // Adjust the position of the text and image
+
+        double imageX = x - IMAGE_SIZE / 2;  // Adjust this as needed
+        double imageY = y - IMAGE_SIZE / 2;  // Adjust this as needed
+
         imageView.setFitHeight(IMAGE_SIZE);
         imageView.setFitWidth(IMAGE_SIZE);
-        double imageCenterX = x - textBounds.getWidth() / 2 - imageView.getFitWidth() / 2;
-        double imageCenterY = y - textBounds.getHeight() / 2 - imageView.getFitHeight() / 2;
-        imageView.setX(imageCenterX);
-        imageView.setY(imageCenterY);
+        imageView.setX(imageX);
+        imageView.setY(imageY);
+
+
         return imageView;
     }
 	
@@ -201,14 +242,15 @@ public class Main extends Application {
             for (int w : g.adj(v)) {
                 // Check for null nodes[w]
                 if (nodes[v] != null && nodes[w] != null) {
-                    double startX = nodes[v].getCenterX() - (nodes[v].getRadius() * Math.cos(angleIncrement * v));
-                    double startY = nodes[v].getCenterY() - (nodes[v].getRadius() * Math.sin(angleIncrement * v));
+                    double startX = nodes[v].getCenterX() ;
+                    double startY = nodes[v].getCenterY() ;
 
-                    double endX = nodes[w].getCenterX() - (nodes[w].getRadius() * Math.cos(angleIncrement * w));
-                    double endY = nodes[w].getCenterY() - (nodes[w].getRadius() * Math.sin(angleIncrement * w));
+                    double endX = nodes[w].getCenterX() ;
+                    double endY = nodes[w].getCenterY() ;
 
                     Line line = new Line(startX, startY, endX, endY);
                     line.setStroke(edgeColors[colorIndex]);
+                    line.setStrokeWidth(2.5);
 
                     colorIndex = (colorIndex + 1) % edgeColors.length;
 

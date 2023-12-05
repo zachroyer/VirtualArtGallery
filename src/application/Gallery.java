@@ -51,20 +51,20 @@ public class Gallery {
 		return artists;
 	}
 
-	public static void main(String[] args) {
-
-		String fileName = "src/Resources/artists.csv";
-		ArrayList<Artist> artists = getArtists(fileName);
-
-		SymbolDigraph sd = new SymbolDigraph(artists);
-		Iterable<Integer> sdAdj = sd.digraph().adj(0);
-
-		System.out.println(sd.digraph());
-
-		for (Integer w : sdAdj) {
-			System.out.println(w);
-		}
-
-	}
+//	public static void main(String[] args) {
+//
+//		String fileName = "src/Resources/artists.csv";
+//		ArrayList<Artist> artists = getArtists(fileName);
+//
+//		SymbolDigraph sd = new SymbolDigraph(artists);
+//		Iterable<Integer> sdAdj = sd.digraph().adj(0);
+//
+//		System.out.println(sd.digraph());
+//
+//		for (Integer w : sdAdj) {
+//			System.out.println(w);
+//		}
+//
+//	}
 
 }
