@@ -2,6 +2,7 @@ package application;
 	
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 import edu.princeton.cs.algs4.Digraph;
@@ -10,6 +11,7 @@ import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -63,16 +65,16 @@ public class Main extends Application {
 			  AnchorPane.setBottomAnchor(scrollPane, 120.0); // Set to 20% of the height
 			  
 			// Create and configure the TextField
-			  TextField textField = new TextField("this is a text");
-			  textField.setMinHeight(IMAGE_SIZE/1.5);
-			  AnchorPane.setTopAnchor(textField, null); // Set to 80% of the height
-			  AnchorPane.setRightAnchor(textField, 10.0);
-			  AnchorPane.setLeftAnchor(textField, 10.0);
-			  AnchorPane.setBottomAnchor(textField, 10.0);
+			  Label label = new Label("this is a text");
+			  label.setMinHeight(IMAGE_SIZE/1.5);
+			  AnchorPane.setTopAnchor(label, null); // Set to 80% of the height
+			  AnchorPane.setRightAnchor(label, 10.0);
+			  AnchorPane.setLeftAnchor(label, 10.0);
+			  AnchorPane.setBottomAnchor(label, 10.0);
 		 
 		     
 	
-				a.getChildren().addAll(scrollPane,textField);
+				a.getChildren().addAll(scrollPane,label);
 		        
 		        double screenWidth = Screen.getPrimary().getVisualBounds().getWidth();
 		        double screenHeight = Screen.getPrimary().getVisualBounds().getHeight();
@@ -180,6 +182,11 @@ public class Main extends Application {
                 // Adjust image size and positiona
                 String imageName = sd.nameOf(v).getImagePath();
                 String imageURL = "Resources/" + imageName;
+                System.out.println(imageName);
+                if (imageName == null || imageName.isEmpty()) {
+                    // Handle the case where the image name is null or empty
+                    throw new FileNotFoundException(imageName+ " for artist is null or empty.");
+                }
                 FileInputStream is = new FileInputStream(imageURL);
                 Image image = new Image(is);
                 ImageView imageView = createImageView(startX, y, text, image);
