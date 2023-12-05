@@ -31,12 +31,10 @@ public class Main extends Application {
 	  private static final int NODE_RADIUS = 70;
 	    private static final int IMAGE_SIZE = 150;
 	    private static final double ARROW_SIZE = 20;
-//	    private static final Color LIGHT_BLUE = new Color( 0.59, 62, 151, 233);
 	    private static final Color LIGHT_BLUE = new Color(62 / 255.0, 151 / 255.0, 233 / 255.0, 0.59);
-
-//	    private static Color RED_BROWN = new Color(142, 63, 78, 0.8);
-//	    private static Color LIME_GREEN = new Color(83, 188, 22, 0.96);
-//	    private static Color FERN_GREEN = new Color(10, 144, 53, 0.6);
+	    private static Color RED_BROWN = new Color(142/255.0, 63/255.0, 78/255.0, 0.8/255.0);
+	    private static Color LIME_GREEN = new Color(83/255.0, 188/255.0, 22/255.0, 0.96/255.0);
+	    private static Color FERN_GREEN = new Color(10/255.0, 144/255.0, 53/255.0, 0.6/255.0);
 
 	public void start(Stage primaryStage) {
 		try {
@@ -160,6 +158,7 @@ public class Main extends Application {
                 double y = centerY + (row - (numRows - 1) / 2.0) * verticalSpacing + 100;
 
                 Circle node = createNode(startX, y, NODE_RADIUS, v);
+                Artist currentArtist = sd.nameOf(v);
                 Text text = new Text(startX, y, sd.nameOf(v).getName());
                 
                 
@@ -167,7 +166,6 @@ public class Main extends Application {
                 // Check the name of the node and apply a different layout for nodes with a certain name
                 if (sd.nameOf(v).isStyle()) {
                     // Apply a different layout for nodes with the name "SpecialNode"
-                    // You can adjust the position and other properties as needed
                    double x = startX + col * horizontalSpacing;
                    totalWidth = 4 * horizontalSpacing;
                    startX = centerX - totalWidth / 2.0 + col * horizontalSpacing + 50 ;
@@ -204,19 +202,31 @@ public class Main extends Application {
                 
                 // Add click event handler to increase the size on click
                 imageView.setOnMouseClicked(event -> {
-                    if (currentlyClickedImageView[0] != null) {
-                        // Reset the size of the previously clicked image
-                    	currentlyClickedImageView[0].setFitHeight(IMAGE_SIZE);
+                    double enlargementFactor = 1.5;
+
+                    if (currentlyClickedImageView[0] != null && currentlyClickedImageView[0] != imageView) {
+                        // Reset the previously clicked ImageView
+                        currentlyClickedImageView[0].setFitHeight(IMAGE_SIZE);
                         currentlyClickedImageView[0].setFitWidth(IMAGE_SIZE);
-                        
+                        // Re-center the ImageView
+                        currentlyClickedImageView[0].setLayoutX(currentlyClickedImageView[0].getLayoutX() + IMAGE_SIZE / 2 * (enlargementFactor - 1));
+                        currentlyClickedImageView[0].setLayoutY(currentlyClickedImageView[0].getLayoutY() + IMAGE_SIZE / 2 * (enlargementFactor - 1));
                     }
 
-                    // Increase the size of the currently clicked image
+                    if (currentlyClickedImageView[0] != imageView) {
+                        // Enlarge the currently clicked ImageView
+                        imageView.setFitHeight(IMAGE_SIZE * enlargementFactor);
+                        imageView.setFitWidth(IMAGE_SIZE * enlargementFactor);
+                        // Move it to keep it centered
+                        imageView.setLayoutX(imageView.getLayoutX() - IMAGE_SIZE / 2 * (enlargementFactor - 1));
+                        imageView.setLayoutY(imageView.getLayoutY() - IMAGE_SIZE / 2 * (enlargementFactor - 1));
 
-                    // Update the currently clicked image
-                    currentlyClickedImageView[0] = imageView;
+                        // Update the currently clicked ImageView
+                        currentlyClickedImageView[0] = imageView;
+                        
+//                        imageView.get
+                    }
                 });
-
                 
                 group.getChildren().addAll(imageView, text);
                 nodes[v] = node;
@@ -248,7 +258,7 @@ public class Main extends Application {
 	
     private void addEdges(Group group, SymbolDigraph sd, Circle[] nodes) {
         Digraph g = sd.digraph();
-        Color[] edgeColors = {Color.RED, Color.BLUE, Color.GREEN, Color.BLACK};
+        Color[] edgeColors = {LIGHT_BLUE, RED_BROWN, LIME_GREEN, FERN_GREEN};
         int colorIndex = 0;
         double angleIncrement = 2 * Math.PI / g.V();
 
