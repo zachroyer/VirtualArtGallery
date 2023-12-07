@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import edu.princeton.cs.algs4.Digraph;
 import javafx.application.Application;
 import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -56,9 +57,11 @@ public class Main extends Application {
 
 			// Create and configure the TextField
 			label = new Label("Click an artist to reveal there influences!");
-			label.setMinHeight(IMAGE_SIZE / 1.5);
-			AnchorPane.setTopAnchor(label, null); // Set to 80% of the height
-			AnchorPane.setRightAnchor(label, 10.0);
+			label.setMinHeight(IMAGE_SIZE );
+			label.setWrapText(true);
+			//label.setMaxWidth(group.getScaleX());
+			AnchorPane.setTopAnchor(label, 1000.0); // Set to 80% of the height
+			AnchorPane.setRightAnchor(label, 15.0);
 			AnchorPane.setLeftAnchor(label, 10.0);
 			AnchorPane.setBottomAnchor(label, 10.0);
 
@@ -181,27 +184,15 @@ public class Main extends Application {
 					imageView.setFitWidth(IMAGE_SIZE);
 					// Add click event handler to increase the size on click
 					imageView.setOnMouseClicked(event -> {
-						double enlargementFactor = 1.5;
-
 						if (currentlyClickedImageView[0] != null) {
 							// Reset the size of the previously clicked image
 							currentlyClickedImageView[0].setFitHeight(IMAGE_SIZE);
 							currentlyClickedImageView[0].setFitWidth(IMAGE_SIZE);
-							currentlyClickedImageView[0].setLayoutX(currentlyClickedImageView[0].getLayoutX()
-									+ IMAGE_SIZE / 2 * (enlargementFactor - 1));
-							currentlyClickedImageView[0].setLayoutY(currentlyClickedImageView[0].getLayoutY()
-									+ IMAGE_SIZE / 2 * (enlargementFactor - 1));
+
 						}
 
 						// Increase the size of the currently clicked image
-						if (currentlyClickedImageView[0] != imageView) {
-							// Enlarge the currently clicked ImageView
-							imageView.setFitHeight(IMAGE_SIZE * enlargementFactor);
-							imageView.setFitWidth(IMAGE_SIZE * enlargementFactor);
-							// Move it to keep it centered
-							imageView.setLayoutX(imageView.getLayoutX() - IMAGE_SIZE / 2 * (enlargementFactor - 1));
-							imageView.setLayoutY(imageView.getLayoutY() - IMAGE_SIZE / 2 * (enlargementFactor - 1));
-						}
+
 						StringBuilder sb = new StringBuilder();
 
 						String name = (sd.nameOf(v).getName());
@@ -215,7 +206,7 @@ public class Main extends Application {
 						for (Artist a : ac.getIndirectInfluences()) {
 							sb.append(a.getName());
 						}
-						label.setText(name + "had a strong influence on the following artists: " + sb.toString());
+						label.setText(name + " had a strong influence on the following artists: " + sb.toString());
 						// Update the currently clicked image
 						currentlyClickedImageView[0] = imageView;
 					});
@@ -235,6 +226,7 @@ public class Main extends Application {
 		double imageY = y - IMAGE_SIZE / 2; // Adjust this as needed
 		imageView.setFitHeight(IMAGE_SIZE);
 		imageView.setFitWidth(IMAGE_SIZE);
+		imageView.setCursor(Cursor.HAND);
 		imageView.setX(imageX);
 		imageView.setY(imageY);
 		return imageView;
