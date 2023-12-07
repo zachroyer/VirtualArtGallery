@@ -64,12 +64,17 @@ public class Gallery {
 ////		for (Integer w : sdAdj) {
 ////			System.out.println(w);
 ////		}
-//		ArtistConnections alf = sd.getArtistConnections("Vincent van Gogh");
+//		ArtistConnections alf = sd.getArtistConnections("Henri Matisse");
+//		System.out.println("Direct Influences:");
+//		for (Artist artist : alf.getInfluencedArtists()) {
+//			System.out.println(artist.getName());
+//		}
+//		System.out.println("\nIndirect Influences:");
 //		for (Artist artist : alf.getIndirectInfluences()) {
 //			System.out.println(artist.getName());
 //		}
-//
-//
+
+
 //	}
 
 }
