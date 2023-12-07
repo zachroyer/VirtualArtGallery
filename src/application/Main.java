@@ -24,6 +24,13 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
+/**
+ * JavaFX Main application. Provides the structure for JavaFX tools and our GUI
+ * Utilizes the SymbolDigraph class and auxiliary classes
+ * 
+ * @author Rafe Danos
+ * @author Zach Royer
+ */
 public class Main extends Application {
 	private static final int NODE_RADIUS = 70;
 	private static final int IMAGE_SIZE = 170;
