@@ -1,24 +1,25 @@
 Name,imagePath,YearBorn,YearDied,Influence
 Leonardo da Vinci,leo.jpg,1452,1519,Raphael, Michelangelo,High Rennaisance
-Raphael,Raphael.jpg,1483,1520,Leonardo da Vinci, Michelangelo,High Rennaisance
-Michelangelo,Michelangelo.jpg,1475,1564,Leonardo da Vinci, Raphael,High Rennaisance
 Vincent van Gogh,Van_Gogh.jpg,1853,1890, Pablo Picasso, Impressionism
-Pablo Picasso,Picasso.jpg,1881,1973,Paul Cézanne, Henri Matisse, Diego Rivera, Salvador Dalí, Surrealism
+Pablo Picasso,Picasso.jpg,1881,1973,Paul Cézanne, Henri Matisse, Diego Rivera, Salvador Dalí, Surrealism,Cubism, George Braque
 Paul Cézanne,Paul-Cezanne.jpg,1839,1906,
 Claude Monet,Claude-Monet.jpg,1840,1926,Eugene Boudin
 Eugene Boudin,Eugene_Boudin.jpg,1824,1898,Claude Monet
 Georgia O'Keeffe,Georgia_O'Keeffe.jpg,1887,1986,Alfred Stieglitz, Paul Cézanne
 Alfred Stieglitz,Alfred_Stieglitz.jpg,1864,1946,Georgia O'Keeffe
 Frida Kahlo,Frida_Kahlo.jpg,1907,1954,Diego Rivera, Surrealism
-Diego Rivera,diegorivera.jpg,1886,1957,Frida Kahlo
+Michelangelo,Michelangelo.jpg,1475,1564,Leonardo da Vinci, Raphael,High Rennaisance
+Diego Rivera,diegorivera.jpg,1886,1957,Frida Kahlo, Surrealism
 Salvador Dalí,Salvador_Dalí.jpg,1904,1989,Giorgio de Chirico, Sigmund Freud
 Giorgio de Chirico,Giorgio_de_Chirico.jpg,1888,1978,Salvador Dalí
 Henri Matisse,matisse.jpeg,1869,1954,Paul Cézanne, Pablo Picasso
-Jackson Pollock,pollock.jpeg,1912,1956,
 Rembrandt van Rijn,rembrandt.jpeg,1606,1669,Caravaggio, Titian
+Raphael,Raphael.jpg,1483,1520,Leonardo da Vinci, Michelangelo,High Rennaisance
 Caravaggio,caravaggio.jpeg,1571,1610,Rembrandt van Rijn
+George Braque, braque.jpg, 1882, 1963, Cubism
 Edvard Munch,scream.jpeg,1863,1944,Vincent van Gogh, 
 Andy Warhol,warhol.jpg,1928,1987
 High Rennaisance,High_Rennaisance.png,true
-Impressionism,Impressionism.png,true
+Impressionism,warhol.jpg,true
 Surrealism,Surrealism.png,true
+Cubism,warhol.jpg,true
